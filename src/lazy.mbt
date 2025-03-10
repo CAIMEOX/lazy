@@ -48,7 +48,7 @@ pub fn Lazy::from_thunk[T](f : () -> T) -> Lazy[T] {
 }
 
 ///| Creates a lazy value from a thunk
-pub fn new[T](f : () -> T) -> Lazy[T] {
+pub fn Lazy::new[T](f : () -> T) -> Lazy[T] {
   Lazy::from_thunk(f)
 }
 
@@ -97,7 +97,7 @@ pub fn get[T](self : Lazy[T]) -> T? {
 
 ///|
 test "lazy" {
-  let x = new(fn() { 1 + 1 })
+  let x = Lazy::new(fn() { 1 + 1 })
   // Before forcing
   inspect!(x.map(fn(x) { x + 1 }), content="Thunk")
   inspect!(x.map_val(fn(x) { x + 1 }), content="Thunk")

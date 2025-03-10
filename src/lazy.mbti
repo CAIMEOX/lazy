@@ -1,0 +1,22 @@
+package CAIMEOX/lazy
+
+// Values
+
+// Types and methods
+type Lazy[T]
+impl Lazy {
+  force[T](Self[T]) -> T
+  from_thunk[T](() -> T) -> Self[T]
+  from_value[T](T) -> Self[T]
+  get[T](Self[T]) -> T?
+  is_value[T](Self[T]) -> Bool
+  map[A, B](Self[A], (A) -> B) -> Self[B]
+  map_val[A, B](Self[A], (A) -> B) -> Self[B]
+  new[T](() -> T) -> Self[T]
+}
+impl[T : Default] Default for Lazy[T]
+
+// Type aliases
+
+// Traits
+
