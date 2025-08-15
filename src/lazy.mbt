@@ -38,22 +38,22 @@ impl[T : Show] Show for Lazy[T] with output(self, logger) {
 }
 
 ///|
-pub fn Lazy::from_value[T](val : T) -> Lazy[T] {
+pub fn[T] Lazy::from_value(val : T) -> Lazy[T] {
   { body: Value(val) }
 }
 
 ///|
-pub fn Lazy::from_thunk[T](f : () -> T) -> Lazy[T] {
+pub fn[T] Lazy::from_thunk(f : () -> T) -> Lazy[T] {
   { body: Thunk(f) }
 }
 
 ///| Creates a lazy value from a thunk
-pub fn Lazy::new[T](f : () -> T) -> Lazy[T] {
+pub fn[T] Lazy::new(f : () -> T) -> Lazy[T] {
   Lazy::from_thunk(f)
 }
 
 ///| Forces the lazy value
-pub fn force[T](self : Lazy[T]) -> T {
+pub fn[T] force(self : Lazy[T]) -> T {
   match self.body {
     Value(v) => v
     Thunk(f) => {
@@ -65,30 +65,32 @@ pub fn force[T](self : Lazy[T]) -> T {
 }
 
 ///| Returns true if the value is already forced
-pub fn is_value[T](self : Lazy[T]) -> Bool {
+pub fn[T] is_value(self : Lazy[T]) -> Bool {
   match self.body {
     Value(_) => true
     Thunk(_) => false
   }
 }
 
-///| Applies f directly if self is already forced, 
+///| Applies f directly if self is already forced,
+
 ///| otherwise it behaves like map
-pub fn map_val[A, B](self : Lazy[A], f : (A) -> B) -> Lazy[B] {
+pub fn[A, B] map_val(self : Lazy[A], f : (A) -> B) -> Lazy[B] {
   match self.body {
     Thunk(t) => Lazy::from_thunk(fn() { f(t()) })
     Value(v) => Lazy::from_value(f(v))
   }
 }
 
-///| Returns a lazy value that when forced, 
+///| Returns a lazy value that when forced,
+
 ///| forces self and applies f to its value
-pub fn map[A, B](self : Lazy[A], f : (A) -> B) -> Lazy[B] {
-  Lazy::from_thunk(fn() { f(force(self)) })
+pub fn[A, B] map(self : Lazy[A], f : (A) -> B) -> Lazy[B] {
+  Lazy::from_thunk(fn() { f(self.force()) })
 }
 
 ///| Get the value if it is already forced
-pub fn get[T](self : Lazy[T]) -> T? {
+pub fn[T] get(self : Lazy[T]) -> T? {
   match self.body {
     Value(v) => Some(v)
     Thunk(_) => None
@@ -99,17 +101,17 @@ pub fn get[T](self : Lazy[T]) -> T? {
 test "lazy" {
   let x = Lazy::new(fn() { 1 + 1 })
   // Before forcing
-  inspect!(x.map(fn(x) { x + 1 }), content="Thunk")
-  inspect!(x.map_val(fn(x) { x + 1 }), content="Thunk")
-  inspect!(x, content="Thunk")
-  inspect!(x.get(), content="None")
-  inspect!(x.is_value(), content="false")
+  inspect(x.map(fn(x) { x + 1 }), content="Thunk")
+  inspect(x.map_val(fn(x) { x + 1 }), content="Thunk")
+  inspect(x, content="Thunk")
+  inspect(x.get(), content="None")
+  inspect(x.is_value(), content="false")
   // Force the value
-  inspect!(x.force(), content="2")
-  inspect!(x.is_value(), content="true")
-  inspect!(x.map(fn(x) { x + 1 }), content="Thunk")
-  inspect!(x.map(fn(x) { x + 1 }).force(), content="3")
-  inspect!(x.map_val(fn(x) { x + 1 }), content="Value(3)")
-  inspect!(x.get(), content="Some(2)")
-  inspect!(x, content="Value(2)")
+  inspect(x.force(), content="2")
+  inspect(x.is_value(), content="true")
+  inspect(x.map(fn(x) { x + 1 }), content="Thunk")
+  inspect(x.map(fn(x) { x + 1 }).force(), content="3")
+  inspect(x.map_val(fn(x) { x + 1 }), content="Value(3)")
+  inspect(x.get(), content="Some(2)")
+  inspect(x, content="Value(2)")
 }
