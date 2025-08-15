@@ -86,7 +86,7 @@ pub fn[A, B] map_val(self : Lazy[A], f : (A) -> B) -> Lazy[B] {
 
 ///| forces self and applies f to its value
 pub fn[A, B] map(self : Lazy[A], f : (A) -> B) -> Lazy[B] {
-  Lazy::from_thunk(fn() { f(force(self)) })
+  Lazy::from_thunk(fn() { f(self.force()) })
 }
 
 ///| Get the value if it is already forced
