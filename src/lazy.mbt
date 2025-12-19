@@ -47,13 +47,15 @@ pub fn[T] Lazy::from_thunk(f : () -> T) -> Lazy[T] {
   { body: Thunk(f) }
 }
 
-///| Creates a lazy value from a thunk
+///|
+/// Creates a lazy value from a thunk
 pub fn[T] Lazy::new(f : () -> T) -> Lazy[T] {
   Lazy::from_thunk(f)
 }
 
-///| Forces the lazy value
-pub fn[T] force(self : Lazy[T]) -> T {
+///|
+/// Forces the lazy value
+pub fn[T] Lazy::force(self : Lazy[T]) -> T {
   match self.body {
     Value(v) => v
     Thunk(f) => {
@@ -64,8 +66,9 @@ pub fn[T] force(self : Lazy[T]) -> T {
   }
 }
 
-///| Returns true if the value is already forced
-pub fn[T] is_value(self : Lazy[T]) -> Bool {
+///|
+/// Returns true if the value is already forced
+pub fn[T] Lazy::is_value(self : Lazy[T]) -> Bool {
   match self.body {
     Value(_) => true
     Thunk(_) => false
@@ -74,8 +77,9 @@ pub fn[T] is_value(self : Lazy[T]) -> Bool {
 
 ///| Applies f directly if self is already forced,
 
-///| otherwise it behaves like map
-pub fn[A, B] map_val(self : Lazy[A], f : (A) -> B) -> Lazy[B] {
+///|
+/// otherwise it behaves like map
+pub fn[A, B] Lazy::map_val(self : Lazy[A], f : (A) -> B) -> Lazy[B] {
   match self.body {
     Thunk(t) => Lazy::from_thunk(fn() { f(t()) })
     Value(v) => Lazy::from_value(f(v))
@@ -84,13 +88,15 @@ pub fn[A, B] map_val(self : Lazy[A], f : (A) -> B) -> Lazy[B] {
 
 ///| Returns a lazy value that when forced,
 
-///| forces self and applies f to its value
-pub fn[A, B] map(self : Lazy[A], f : (A) -> B) -> Lazy[B] {
+///|
+/// forces self and applies f to its value
+pub fn[A, B] Lazy::map(self : Lazy[A], f : (A) -> B) -> Lazy[B] {
   Lazy::from_thunk(fn() { f(self.force()) })
 }
 
-///| Get the value if it is already forced
-pub fn[T] get(self : Lazy[T]) -> T? {
+///|
+/// Get the value if it is already forced
+pub fn[T] Lazy::get(self : Lazy[T]) -> T? {
   match self.body {
     Value(v) => Some(v)
     Thunk(_) => None

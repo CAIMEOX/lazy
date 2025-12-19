@@ -1,0 +1,23 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "CAIMEOX/lazy"
+
+// Values
+
+// Errors
+
+// Types and methods
+type Lazy[T]
+pub fn[T] Lazy::force(Self[T]) -> T
+pub fn[T] Lazy::from_thunk(() -> T) -> Self[T]
+pub fn[T] Lazy::from_value(T) -> Self[T]
+pub fn[T] Lazy::get(Self[T]) -> T?
+pub fn[T] Lazy::is_value(Self[T]) -> Bool
+pub fn[A, B] Lazy::map(Self[A], (A) -> B) -> Self[B]
+pub fn[A, B] Lazy::map_val(Self[A], (A) -> B) -> Self[B]
+pub fn[T] Lazy::new(() -> T) -> Self[T]
+pub impl[T : Default] Default for Lazy[T]
+
+// Type aliases
+
+// Traits
+
